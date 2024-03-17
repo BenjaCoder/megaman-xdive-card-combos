@@ -1,15 +1,4 @@
 window.onload = () => {
-
-    class Card {
-        constructor(number, rank, name, color, effect1, effect2) {
-            this.number = number;
-            this.rank = rank;
-            this.name = name;
-            this.color = color;
-            this.effect1 = effect1;
-            this.effect2 = effect2;
-        }
-    }
     
     let raw_data =
     `1	B	Refleczer	R						
@@ -701,6 +690,17 @@ window.onload = () => {
     402	S	Ultra Puffy2	B		B	Y	G		When attacking a target from long range, increase damage by 18%(→24%)
     403	S	Ultra Fishy	G		G	B			When equipped with a Buster, increase damage by 10%(→12%)
     403	S	Ultra Fishy2	G		G	B	Y		When equipped with TWO Busters, decrease damage taken 14%(→18%)`;
+
+    class Card {
+        constructor(number, rank, name, color, effect1, effect2) {
+            this.number = number;
+            this.rank = rank;
+            this.name = name;
+            this.color = color;
+            this.effect1 = effect1;
+            this.effect2 = effect2;
+        }
+    }
     
     function transformData(data) {
         let raw_cards = [];
@@ -726,8 +726,6 @@ window.onload = () => {
         });
         return card_list;
     }
-    
-    let cards = transformData(raw_data);
 
     function createDropdown(cards, div, dropdown, position) {
         let blankOption = document.createElement("option");
@@ -738,6 +736,7 @@ window.onload = () => {
             let option = document.createElement("option");
             option.value = card.name;
             option.innerText = card.name;
+            option.setAttribute("class", `color-${card.color}`)
             dropdown.appendChild(option);
         });
         div.appendChild(dropdown);
@@ -747,20 +746,10 @@ window.onload = () => {
         dropdown.addEventListener("input", () => {
             chosenCards[position] = dropdown.value
             console.log(getChosenCards())
+            applyDropdownStyling()
         })
     }
-
-    const chosenCards = new Array(3);
     
-    const dropdowns = document.getElementById("dropdowns");
-    const dropdown1 = document.createElement("select");
-    const dropdown2 = document.createElement("select");
-    const dropdown3 = document.createElement("select");
-    
-    createDropdown(sortByName(cards), dropdowns, dropdown1, 0);
-    createDropdown(sortByName(cards), dropdowns, dropdown2, 1);
-    createDropdown(sortByName(cards), dropdowns, dropdown3, 2);
-
     function sortByName(cards) {
         let cards2 = [...cards]
         cards2.sort((a, b) => {
@@ -774,13 +763,15 @@ window.onload = () => {
     }
 
     function getCardByName(cardName) {
-        let result = '';
         for (let i = 0; i < cards.length; i++) {
-            if (cards[i].name == cardName) {
-                result = cards[i];
-            }
+            if (cards[i].name == cardName) return cards[i];
         }
-        return result;
+    }
+
+    function getColorByName(cardName) {
+        for (let i = 0; i < cards.length; i++) {
+            if (cards[i].name == cardName) return cards[i].color;
+        }
     }
 
     function getChosenCards() {
@@ -790,5 +781,51 @@ window.onload = () => {
         });
         return effectList;
     }
+
+    function applyDropdownOptionStyling() {
+        let allSelects = document.querySelectorAll('select')
+        for (let i = 0; i < allSelects.length; i++) {
+            for (let j = 0; j < allSelects[i].childNodes.length; j++) {
+                if (allSelects[i][j].hasAttribute("class")) {
+                    let classColor = allSelects[i][j].className.substring(allSelects[i][j].className.length - 1)
+                    allSelects[i][j].setAttribute("style", `background-color:${
+                        classColor == 'R' ? RED : (classColor == 'B' ? BLUE : (classColor == 'G' ? GREEN : YELLOW))
+                    };font-weight:bold;font-family:verdana`)
+                }
+            }
+        }
+    }
+
+    function applyDropdownStyling() {
+        let allSelects = document.querySelectorAll('select')
+        for (let i = 0; i < allSelects.length; i++) {
+            let value = allSelects[i].value;
+            let color = getColorByName(value);
+            allSelects[i].setAttribute("style", `background-color:${
+                color == 'R' ? RED : (color == 'B' ? BLUE : (color  == 'G' ? GREEN : (color == 'Y' ? YELLOW : 'white')))
+            };font-weight:bold;font-family:verdana`)
+        }
+    }
+
+    const RED = "#ff6666";
+    const BLUE = "#6666ff";
+    const GREEN = "#66ff66";
+    const YELLOW = "yellow"
+
+    let cards = transformData(raw_data);
+
+    const chosenCards = new Array(3);
+    
+    const dropdowns = document.getElementById("dropdowns");
+    const dropdown1 = document.createElement("select");
+    const dropdown2 = document.createElement("select");
+    const dropdown3 = document.createElement("select");
+    
+    createDropdown(sortByName(cards), dropdowns, dropdown1, 0);
+    createDropdown(sortByName(cards), dropdowns, dropdown2, 1);
+    createDropdown(sortByName(cards), dropdowns, dropdown3, 2);
+
+    applyDropdownStyling();
+    applyDropdownOptionStyling();
 
 }
