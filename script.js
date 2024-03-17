@@ -782,6 +782,17 @@ window.onload = () => {
         return effectList;
     }
 
+    function applyDropdownStyling() {
+        let allSelects = document.querySelectorAll('select')
+        for (let i = 0; i < allSelects.length; i++) {
+            let value = allSelects[i].value;
+            let color = getColorByName(value);
+            allSelects[i].setAttribute("style", `background-color:${
+                color == 'R' ? RED : (color == 'B' ? BLUE : (color  == 'G' ? GREEN : (color == 'Y' ? YELLOW : 'white')))
+            };font-weight:bold;font-family:verdana;padding:5px 0px;text-align:center`)
+        }
+    }
+
     function applyDropdownOptionStyling() {
         let allSelects = document.querySelectorAll('select')
         for (let i = 0; i < allSelects.length; i++) {
@@ -793,17 +804,6 @@ window.onload = () => {
                     };font-weight:bold;font-family:verdana`)
                 }
             }
-        }
-    }
-
-    function applyDropdownStyling() {
-        let allSelects = document.querySelectorAll('select')
-        for (let i = 0; i < allSelects.length; i++) {
-            let value = allSelects[i].value;
-            let color = getColorByName(value);
-            allSelects[i].setAttribute("style", `background-color:${
-                color == 'R' ? RED : (color == 'B' ? BLUE : (color  == 'G' ? GREEN : (color == 'Y' ? YELLOW : 'white')))
-            };font-weight:bold;font-family:verdana`)
         }
     }
 
