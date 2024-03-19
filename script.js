@@ -744,9 +744,9 @@ window.onload = () => {
         div.appendChild(document.createElement("br"))
 
         dropdown.addEventListener("input", () => {
-            chosenCards[position] = dropdown.value
-            console.log(getChosenCards())
+            chosenCards[position] = getCardByName(dropdown.value);
             applyDropdownStyling()
+            postEffects(getAppliedEffects())
         })
     }
     
@@ -775,11 +775,60 @@ window.onload = () => {
     }
 
     function getChosenCards() {
-        let effectList = [];
-        chosenCards.forEach(card => {
-            effectList.push(getCardByName(card))
-        });
-        return effectList;
+        return chosenCards;
+    }
+
+    function getChosenCardsColors() {
+        let colors = [];
+        for (let i = 0; i < chosenCards.length; i++) {
+            let c = chosenCards[i] ? chosenCards[i].color : '';
+            colors.push(c)
+        }
+        return colors;
+    }
+
+    function getAppliedEffects() {
+        let cardColors = getChosenCardsColors().sort().join('');
+        let gainedEffects = [];
+        for (let i = 0; i < chosenCards.length; i++) {
+            let effect1Req = '';
+            let effect2Req = '';
+            if (chosenCards[i]) {
+                let sliceLength1 = chosenCards[i].effect1.length - 1;
+                let sliceLength2 = chosenCards[i].effect2.length - 1;
+                if (chosenCards[i].effect1.length > 1) {
+                    effect1Req = chosenCards[i].effect1.slice(-sliceLength1).sort().join('')
+                } if (chosenCards[i].effect2.length > 1) {
+                    effect2Req = chosenCards[i].effect2.slice(-sliceLength2).sort().join('');
+                }
+            } console.log(effect1Req)
+            if (cardColors.includes(effect1Req) && effect1Req.length > 0)
+                gainedEffects.push({
+                    name: chosenCards[i].name,
+                    color: chosenCards[i].color,
+                    effects: [chosenCards[i].effect1[0]]
+            });
+            if (cardColors.includes(effect2Req) && effect2Req.length > 0) {
+                for (let i = 0; i < gainedEffects.length; i++) {
+                    if (gainedEffects[i].name = chosenCards[i].name) {
+                        gainedEffects[i].effects.push(chosenCards[i].effect2[0])
+                    }
+                }
+            }
+        }
+        return gainedEffects;
+    }
+
+    function postEffects(effects) {
+        let post = '<dl>';
+        effects.forEach(effect => {
+            post += `<dt>${effect.name}</dt>`;
+            post += `<dd>${effect.effects[0]}</dd>`;
+            post += effect.effects[1] ? `<dd>${effect.effects[1]}</dd>` : ``;
+        })
+        post += "</dl>";
+        const effectsDiv = document.getElementById("effects");
+        effectsDiv.innerHTML = post;
     }
 
     function applyDropdownStyling() {
