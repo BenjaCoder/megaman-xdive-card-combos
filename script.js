@@ -791,27 +791,28 @@ window.onload = () => {
         let cardColors = getChosenCardsColors().sort().join('');
         let gainedEffects = [];
         for (let i = 0; i < chosenCards.length; i++) {
+            let currCard = chosenCards[i];
             let effect1Req = '';
             let effect2Req = '';
-            if (chosenCards[i]) {
-                let sliceLength1 = chosenCards[i].effect1.length - 1;
-                let sliceLength2 = chosenCards[i].effect2.length - 1;
-                if (chosenCards[i].effect1.length > 1) {
-                    effect1Req = chosenCards[i].effect1.slice(-sliceLength1).sort().join('')
-                } if (chosenCards[i].effect2.length > 1) {
-                    effect2Req = chosenCards[i].effect2.slice(-sliceLength2).sort().join('');
+            if (currCard) {
+                let sliceLength1 = currCard.effect1.length - 1;
+                let sliceLength2 = currCard.effect2.length - 1;
+                if (currCard.effect1.length > 1) {
+                    effect1Req = currCard.effect1.slice(-sliceLength1).sort().join('')
+                } if (currCard.effect2.length > 1) {
+                    effect2Req = currCard.effect2.slice(-sliceLength2).sort().join('');
                 }
-            } console.log(effect1Req)
+            } console.log(cardColors)
             if (cardColors.includes(effect1Req) && effect1Req.length > 0)
                 gainedEffects.push({
-                    name: chosenCards[i].name,
-                    color: chosenCards[i].color,
-                    effects: [chosenCards[i].effect1[0]]
+                    name: currCard.name,
+                    color: currCard.color,
+                    effects: [currCard.effect1[0]]
             });
             if (cardColors.includes(effect2Req) && effect2Req.length > 0) {
-                for (let i = 0; i < gainedEffects.length; i++) {
-                    if (gainedEffects[i].name = chosenCards[i].name) {
-                        gainedEffects[i].effects.push(chosenCards[i].effect2[0])
+                for (let j = 0; j < gainedEffects.length; j++) {
+                    if (gainedEffects[j].name == currCard.name) {
+                        gainedEffects[j].effects.push(currCard.effect2[0]);
                     }
                 }
             }
