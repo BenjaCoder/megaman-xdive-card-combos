@@ -10,5 +10,27 @@
     <!-- <button id="b1">Press</button><br /><br /> -->
     <div id="dropdowns"></div>
     <div id="effects"></div>
+    <div>
+        <label for="card-search">Card name:
+            <input type="search" name="card-search" id="card-search">
+        </label>
+    </div>
+    <div id="search-results"></div>
+    <div>
+        <fieldset>
+            <legend>Cards by color</legend>
+            <input type="radio" id="clear" name="colors" value="Clear" />
+            <label for="clear">CLEAR</label>
+            <input type="radio" id="red" name="colors" value="Red" />
+            <label for="red">Red</label>
+            <input type="radio" id="blue" name="colors" value="Blue" />
+            <label for="blue">Blue</label>
+            <input type="radio" id="green" name="colors" value="Green" />
+            <label for="green">Green</label>
+            <input type="radio" id="yellow" name="colors" value="Yellow" />
+            <label for="yellow">Yellow</label>
+            <div id="filtered-colors"></div>
+        </fieldset>
+    </div>
 </body>
 </html>

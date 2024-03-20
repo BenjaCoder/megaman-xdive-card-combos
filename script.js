@@ -264,7 +264,7 @@ window.onload = () => {
     179	A	Wood Man	G		G	G			When HP is 75% or higher, reduce damage taken by 4%(→6%).
     180	S	Dr. Wily (OG Card Pack)	R		R	R			When you hit a target in damage enhancement status, increase damage you deal by 8%(→10%).
     181	S	Kalinka	Y		Y	Y			30%(→40%) chance to become immune to the effects of No skills; the same type of chance can be stacked.
-    182	S	Dr. Light (OG Card Pack)	B		B				When below 50% HP, increase damage by 6%(→8%).
+    182	S	Dr. Light (OG Card Pack)	B		B	B			When below 50% HP, increase damage by 6%(→8%).
     183	S	Dr. Cossack	G		G	G			30%(→40%) chance to become immune to the effects of Defense Reduction.
     184	S	Megaman Family	G		G	B			When you are attacked by a player, reduce the damage you take by 6%(→8%).
     184	S	Megaman Family2	G		G	B	R		30%(→40%) chance to become immune to the effects of Confusion; the same type of chance can be stacked.
@@ -824,8 +824,8 @@ window.onload = () => {
         let post = '<dl>';
         effects.forEach(effect => {
             post += `<dt>${effect.name}</dt>`;
-            post += `<dd>${effect.effects[0]}</dd>`;
-            post += effect.effects[1] ? `<dd>${effect.effects[1]}</dd>` : ``;
+            post += `<dd>&bull;${effect.effects[0]}</dd>`;
+            post += effect.effects[1] ? `<dd>&bull;${effect.effects[1]}</dd>` : ``;
         })
         post += "</dl>";
         const effectsDiv = document.getElementById("effects");
@@ -870,6 +870,51 @@ window.onload = () => {
     const dropdown1 = document.createElement("select");
     const dropdown2 = document.createElement("select");
     const dropdown3 = document.createElement("select");
+
+    const cardSearch = document.getElementById("card-search")
+    const searchResults = document.getElementById("search-results");
+
+    cardSearch.addEventListener("input", () => {
+        let value = cardSearch.value.toLowerCase();
+        let tempList = [];
+        let output = '';
+        for (let i = 0; i < cards.length; i++) {
+            if (cards[i].name.toLowerCase().includes(value)) {
+                tempList.push(cards[i].name)
+            }
+        }
+        tempList.sort()
+        for (let i = 0; i < tempList.length; i++) {
+            output += `<p>${tempList[i]}</p>`
+        }
+        searchResults.innerHTML = output;
+        if (cardSearch.value.length < 1) searchResults.innerHTML = ''
+    });
+
+    const colorRadios = document.getElementsByName("colors");
+    const filteredColors = document.getElementById("filtered-colors");
+
+    for (let i = 0; i < colorRadios.length; i++) {
+        colorRadios[i].addEventListener("input", () => {
+            let colorList = [];
+            let output = '';
+            let c = colorRadios[i].value[0];
+            for (let j = 0; j < cards.length; j++) {
+                if (cards[j].color == c) {
+                    colorList.push(cards[j].name);
+                }
+            }
+            colorList.sort();
+            for (let i = 0; i < colorList.length; i++) {
+                output += `<p>${colorList[i]}</p>`
+            }
+            filteredColors.innerHTML = output;
+        })
+    }
+
+    colorRadios[0].addEventListener("input", () => {
+        filteredColors.innerHTML = ''
+    })
     
     createDropdown(sortByName(cards), dropdowns, dropdown1, 0);
     createDropdown(sortByName(cards), dropdowns, dropdown2, 1);
