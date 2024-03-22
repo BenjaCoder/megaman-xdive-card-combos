@@ -915,6 +915,41 @@ window.onload = () => {
     colorRadios[0].addEventListener("input", () => {
         filteredColors.innerHTML = ''
     })
+
+    const weaponBoxes = document.getElementsByName("weapons");
+    const filteredWeapons = document.getElementById("filtered-weapons");
+
+    for (let i = 0; i < weaponBoxes.length; i++) {
+        weaponBoxes[i].addEventListener("input", () => {
+            let weaponSearchList = [];
+            let weaponList = [];
+            let output = '';
+            for (let j = 0; j < weaponBoxes.length; j++) {
+                if (weaponBoxes[j].checked) {
+                    weaponSearchList.push(weaponBoxes[j].value)
+                }
+            }
+            if (weaponSearchList.length == 0) {
+                filteredWeapons.innerHTML = '';
+            }
+            else {
+                for (let k = 0; k < cards.length; k++) {
+                    let hasEffect1 = cards[k].effect1.length > 1;
+                    let hasEffect2 = cards[k].effect2.length > 1;
+                    if ((hasEffect1 && weaponSearchList.some(x => cards[k].effect1[0].toLowerCase().includes(x.toLowerCase()))) ||
+                        (hasEffect2 && weaponSearchList.some(y => cards[k].effect2[0].toLowerCase().includes(y.toLowerCase())))) {
+                            console.log('here')
+                            weaponList.push(cards[k].name);
+                    }
+                }
+                weaponList.sort();
+                for (let z = 0; z < weaponList.length; z++) {
+                    output += `<p>${weaponList[z]}</p>`
+                }
+                filteredWeapons.innerHTML = output;
+            }
+        })
+    }
     
     createDropdown(sortByName(cards), dropdowns, dropdown1, 0);
     createDropdown(sortByName(cards), dropdowns, dropdown2, 1);
